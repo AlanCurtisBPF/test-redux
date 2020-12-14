@@ -52,7 +52,6 @@ describe("counterActions", () => {
       },
     ];
     store.dispatch(actions.reset());
-    console.log(store.getState());
 
     expect(store.getActions()).toEqual(expectedActions);
   });

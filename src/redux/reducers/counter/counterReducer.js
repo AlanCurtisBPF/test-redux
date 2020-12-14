@@ -1,5 +1,5 @@
 // import Actions Types
-import { INCREMENT, DECREMENT, RESET } from "./counterActions";
+import * as types from "./counterTypes";
 
 // Initial State
 const initialState = {
@@ -7,20 +7,17 @@ const initialState = {
 };
 
 // Reducer
-const counterReducer = (state = initialState, action) =>{
+const counterReducer = (state = initialState, action) => {
   switch (action.type) {
-    case INCREMENT:
-        console.log('reducer')
+    case types.INCREMENT:
       return Object.assign({}, state, action.payload);
-    case DECREMENT:
-        console.log('reducer')
+    case types.DECREMENT:
       return Object.assign({}, state, action.payload);
-    case RESET:
-        console.log('reducer')
+    case types.RESET:
       return Object.assign({}, state, initialState);
     default:
       return state;
   }
-}
+};
 
 export default counterReducer;

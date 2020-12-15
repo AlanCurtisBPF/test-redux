@@ -1,72 +1,89 @@
-import configureMockStore from "redux-mock-store";
-import thunk from "redux-thunk";
+import configureStore from "../../configureStore";
+import * as actions from "./counterActions";
+import counterReducer, { initialState } from "./counterReducer";
 
-import * as types from './counterTypes';
-import * as actions from './counterActions';
-import counterReducer, {initialState} from './counterReducer';
+describe("counterReducer", () => {
+  let store;
+  beforeEach(() => {
+    store = configureStore();
+  });
 
-const middlewares = [thunk];
-const mockStore = configureMockStore(middlewares);
+  it("test run", () => {
+    expect(true).toEqual(true);
+  });
 
-describe('counterReducer', ()=>{
-    let store;
-    beforeEach(() => {
-      store = mockStore({ counter: { count: 0 } });
-    });
+  it("should return inital state: version 01", () => {
+    expect(counterReducer(undefined, {})).toEqual(initialState);
+  });
 
+  it("should return inital state: version 02", () => {
+    const state = counterReducer(undefined, { type: "@@INIT" });
+    expect(state).toEqual(initialState);
+  });
 
-    it('test run', ()=>{
-        expect(true).toEqual(true)
-    })
+  // INCREMENT //
+  it("should handle INCREMENT", () => {
+    const actionsList = [actions.increment()];
 
-    it('should return inital state: version 01', ()=>{
-        expect(counterReducer(undefined, {})).toEqual(initialState)
-    });
+    actionsList.forEach((action) => store.dispatch(action));
 
-    test('should return inital state: version 02', ()=>{
-        const state = counterReducer(undefined, {type: '@@INIT'});
-        expect(state).toEqual(initialState);
-      });
+    const actual = store.getState().counter;
+    const expected = { count: 1 };
+    expect(actual).toEqual(expected);
+  });
+  it("should handle INCREMENT 4x", () => {
+    const actionsList = [
+      actions.increment(),
+      actions.increment(),
+      actions.increment(),
+      actions.increment(),
+    ];
 
-    it( 'should handle INCREMENT', ()=>{
+    actionsList.forEach((action) => store.dispatch(action));
 
-        const action = {
-            type: types.INCREMENT,
-            payload: { count: 1}
-        };
+    const actual = store.getState().counter;
+    const expected = { count: 4 };
+    expect(actual).toEqual(expected);
+  });
 
-        const state= counterReducer(undefined, action);
+  // DECREMENT //
+  it("should handle DECREMENT", () => {
+    const actionsList = [actions.decrement()];
 
-        expect(state).toEqual({count:1})
-    })
+    actionsList.forEach((action) => store.dispatch(action));
 
-    it( 'should handle INCREMENT twice', async ()=>{
-        // need to be able to dispatch multiple actions to test reducer.
-        /*
-        const action1 = {
-            type: types.INCREMENT,
-            payload: { count: store.getState().counter.count + 1}
-        };
-        const action2 = {
-            type: types.INCREMENT,
-            payload: { count: store.getState().counter.count + 1}
-        };
-        const actions = [action1, action2]
+    const actual = store.getState().counter;
+    const expected = { count: -1 };
+    expect(actual).toEqual(expected);
+  });
+  it("should handle DECREMENT 4x", () => {
+    const actionsList = [
+      actions.decrement(),
+      actions.decrement(),
+      actions.decrement(),
+      actions.decrement(),
+    ];
 
-        await actions.forEach(action=>{
-            console.log({action})
-            store.dispatch(action)
-        })
+    actionsList.forEach((action) => store.dispatch(action));
 
-        console.log(store.getActions())
+    const actual = store.getState().counter;
+    const expected = { count: -4 };
+    expect(actual).toEqual(expected);
+  });
 
+  // RESET //
+  it("should handle RESET", () => {
+    const actionsList = [
+      actions.increment(),
+      actions.increment(),
+      actions.decrement(),
+      actions.reset(),
+    ];
 
-        const actual = store.getState();
-        const expected = {
-            counter: {count: -5}
-        }
-        expect(actual).toEqual(expected)
-        // */
-    })
-})
+    actionsList.forEach((action) => store.dispatch(action));
 
+    const actual = store.getState().counter;
+    const expected = initialState;
+    expect(actual).toEqual(expected);
+  });
+});

@@ -2,7 +2,7 @@
 import * as types from "./counterTypes";
 
 // Initial State
-const initialState = {
+export const initialState = {
   count: 0,
 };
 
